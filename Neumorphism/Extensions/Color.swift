@@ -26,4 +26,16 @@ extension Color {
         green: 25 / 255,
         blue: 30 / 255
     )
+    
+    static let lightStart = Color(
+        red: 60 / 255,
+        green: 160 / 255,
+        blue: 240 / 255
+    )
+    
+    static let lightEnd = Color(
+        red: 30 / 255,
+        green: 80 / 255,
+        blue: 120 / 255
+    )
 }

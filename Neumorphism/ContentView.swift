@@ -73,10 +73,12 @@ struct SimpleButtonStyle: ButtonStyle {
                     .overlay(
                         shape
                             .stroke(
-                                LinearGradient(Color.darkStart, Color.darkEnd),
+                                LinearGradient(Color.lightStart, Color.lightEnd),
                                 lineWidth: 4
                             )
                     )
+                    .shadow(color: Color.darkStart, radius: 10, x: 5, y: 5)
+                    .shadow(color: Color.darkEnd, radius: 10, x: -5, y: -5)
             }
             else {
                 shape
@@ -85,7 +87,7 @@ struct SimpleButtonStyle: ButtonStyle {
                     .overlay(
                         shape
                             .stroke(
-                                Color.darkEnd,
+                                LinearGradient(Color.lightStart, Color.lightEnd),
                                 lineWidth: 4
                             )
                     )
@@ -97,19 +99,106 @@ struct SimpleButtonStyle: ButtonStyle {
  }
  
  struct DarkButtonStyle: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-        .padding(30)
-        .contentShape(RoundedRectangle(cornerRadius: 25))
-        .background(
-            DarkBackground(isHighlighted: configuration.isPressed, shape: RoundedRectangle(cornerRadius: 25))
-        )
-        .animation(nil)
-        
+     func makeBody(configuration: Configuration) -> some View {
+         configuration.label
+         .padding(30)
+         .contentShape(RoundedRectangle(cornerRadius: 25))
+         .background(
+             DarkBackground(isHighlighted: configuration.isPressed, shape: RoundedRectangle(cornerRadius: 25))
+         )
+         .animation(nil)
+         
+     }
+  }
+  
+ struct DarkToggleStyle: ToggleStyle {
+      func makeBody(configuration: Self.Configuration) -> some View {
+          Button(action: {
+              configuration.isOn.toggle()
+          }) {
+              configuration.label
+                  .padding(30)
+                  .contentShape(RoundedRectangle(cornerRadius: 25))
+          }
+          .background(
+              DarkBackground(isHighlighted: configuration.isOn, shape: RoundedRectangle(cornerRadius: 25))
+          )
+      }
+  }
+ 
+ struct ColorfulBackground<S: Shape> : View {
+    var isHighlighted: Bool
+    var shape: S
+    
+    var body: some View {
+        ZStack {
+            if isHighlighted {
+                shape
+                    // fill Pillow Effect
+                    .fill(LinearGradient(Color.lightEnd, Color.lightStart))
+                    .overlay(
+                        shape
+                            .stroke(
+                                LinearGradient(Color.lightStart, Color.lightEnd),
+                                lineWidth: 4
+                            )
+                    )
+                    .shadow(color: Color.darkStart, radius: 10, x: 5, y: 5)
+                    .shadow(color: Color.darkEnd, radius: 10, x: -5, y: -5)
+            }
+            else {
+                shape
+                    // fill Pillow Effect
+                    .fill(LinearGradient(Color.lightStart, Color.lightEnd))
+                    .overlay(
+                        shape
+                            .stroke(
+                                Color.lightEnd,
+                                lineWidth: 4
+                            )
+                    )
+                    .shadow(color: Color.darkStart, radius: 10, x: -10, y: -10)
+                    .shadow(color: Color.darkEnd, radius: 10, x: 10, y: 10)
+            }
+        }
     }
  }
+ 
+ 
 
+
+ struct ColorfulButtonStyle: ButtonStyle {
+     func makeBody(configuration: Configuration) -> some View {
+         configuration.label
+         .padding(30)
+         .contentShape(RoundedRectangle(cornerRadius: 25))
+         .background(
+             DarkBackground(isHighlighted: configuration.isPressed, shape: RoundedRectangle(cornerRadius: 25))
+         )
+         .animation(nil)
+         
+     }
+  }
+  
+ struct ColorfulToggleStyle: ToggleStyle {
+      func makeBody(configuration: Self.Configuration) -> some View {
+          Button(action: {
+              configuration.isOn.toggle()
+          }) {
+              configuration.label
+                  .padding(30)
+                  .contentShape(RoundedRectangle(cornerRadius: 25))
+          }
+          .background(
+              DarkBackground(isHighlighted: configuration.isOn, shape: RoundedRectangle(cornerRadius: 25))
+          )
+      }
+  }
+
+ 
 struct ContentView: View {
+    @State private var isToggled = false
+    
     var body: some View {
         
         VStack {            
@@ -118,13 +207,41 @@ struct ContentView: View {
                 Color.offWhite
                 LinearGradient(Color.darkStart, Color.darkEnd)
                 
-                Button(action: {
-                    print("Btn Tapped")
-                }) {
-                    Image(systemName: "heart.fill").foregroundColor(.offWhite)
+                HStack(spacing: 40) {
+                    VStack(spacing: 40) {
+                        Button(action: {
+                            print("Btn Tapped")
+                        }) {
+                            Image(systemName: "heart.fill").foregroundColor(.lightStart)
+                        }
+                        .buttonStyle(DarkButtonStyle())
+                        .zIndex(1)
+                        
+                        Toggle(isOn: $isToggled) {
+                            Image(systemName: "heart.fill")
+                                .foregroundColor(.white)
+                        }
+                        .toggleStyle(DarkToggleStyle())
+                    }
+                    
+                    VStack(spacing: 40) {
+                         Button(action: {
+                             print("Btn Tapped")
+                         }) {
+                             Image(systemName: "heart.fill").foregroundColor(.offWhite)
+                         }
+                         .buttonStyle(ColorfulButtonStyle())
+                         .zIndex(1)
+                         
+                        
+                        Toggle(isOn: $isToggled) {
+                            Image(systemName: "heart.fill")
+                                .foregroundColor(.white)
+                        }
+                        .toggleStyle(ColorfulToggleStyle())
+                        
+                     }
                 }
-                .buttonStyle(DarkButtonStyle())
-                .zIndex(1)
             }
             .edgesIgnoringSafeArea(.all)
         }
