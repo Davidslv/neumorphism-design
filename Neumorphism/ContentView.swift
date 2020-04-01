@@ -16,30 +16,30 @@ struct SimpleButtonStyle: ButtonStyle {
             .background(
                 Group {
                     if configuration.isPressed {
-                        Circle()
+                        RoundedRectangle(cornerRadius: 25)
                             .fill(Color.offWhite)
                             .overlay(
-                                Circle()
+                                RoundedRectangle(cornerRadius: 25)
                                     .stroke(Color.gray, lineWidth: 4)
                                     .blur(radius: 4)
                                     .offset(x: 2, y: 2)
                                 .mask(
-                                    Circle()
+                                    RoundedRectangle(cornerRadius: 25)
                                     .fill(LinearGradient(Color.black, Color.clear))
                                 )
                             )
                         .overlay(
-                            Circle()
+                            RoundedRectangle(cornerRadius: 25)
                                 .stroke(Color.white, lineWidth: 8)
                                 .blur(radius: 4)
                                 .offset(x: -2, y: -2)
                             .mask(
-                                Circle()
+                                RoundedRectangle(cornerRadius: 25)
                                 .fill(LinearGradient(Color.clear, Color.black)))
                         )
                     }
                     else {
-                        Circle()
+                        RoundedRectangle(cornerRadius: 25)
                             .fill(Color.offWhite)
                             .shadow(
                                 color: Color.black.opacity(0.2),
